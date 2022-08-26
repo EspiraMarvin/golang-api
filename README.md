@@ -22,6 +22,6 @@
         GET TODO BY ID TODO(GET method):   localhost:4000/todos/1"
         UPDATE TODO STATUS (PATCH method): localhost:4000/todos"
         GET ALL TODO (GET method):         localhost:4000/todos"
-        DELETE A TODO (DELETE method):     localhost:4000/todos"
+        DELETE A TODO (DELETE method):     localhost:4000/todos/1"
 
 ---------------
