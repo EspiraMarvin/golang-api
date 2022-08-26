@@ -19,6 +19,11 @@ var todos = []todo{
 	{ID: "3", Item: "Record Video", Completed: false},
 }
 
+// display home page
+func HomepageHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "Welcome to the Todo APIs with Golang"})
+}
+
 // get all todos
 func getTodos(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, todos)
@@ -63,7 +68,6 @@ func getTodoById(id string) (*todo, error) {
 }
 
 // update todo
-
 func toggleTodoStatus(context *gin.Context) {
 	id := context.Param("id")
 	todo, err := getTodoById(id)
@@ -78,11 +82,40 @@ func toggleTodoStatus(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, todo)
 }
 
+func deleteTodo(context *gin.Context) {
+	id := context.Param("id")
+	index := -1
+	// todo, _ := getTodoById(id)
+	// if err != nil {
+	// 	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "Todo Not Found"})
+	// }
+
+	for i := 0; i < len(todos); i++ {
+		if (todos[i].ID) == id {
+			index = 1
+		}
+	}
+
+	if index == -1 {
+		context.JSON(http.StatusNotFound, gin.H{
+			"error": "Todo not found",
+		})
+		return
+	}
+
+	todos = append(todos[:index], todos[index+1:]...)
+	// context.JSON(http.StatusOK, todo)
+	context.JSON(http.StatusOK, gin.H{"message": "Todo has been deleted"})
+	// context.IndentedJSON(http.StatusOK, todo, gin.H{ "message": "Todo has been deleted"})
+}
+
 func main() {
 	router := gin.Default() // creates server
+	router.GET("/", HomepageHandler)
 	router.GET("/todos", getTodos)
 	router.GET("/todos/:id", getTodo)
 	router.PATCH("/todos/:id", toggleTodoStatus)
 	router.POST("/todos", addTodo)
+	router.DELETE("/todos/:id", deleteTodo)
 	router.Run("localhost:4000")
 }
